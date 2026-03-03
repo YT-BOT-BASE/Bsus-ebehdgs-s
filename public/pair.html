@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAIR DEVICE - SOS MINI LITE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 1rem;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            margin: 1rem 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: #ff6b6b;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .code {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            background: white;
+            color: #ff6b6b;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .loader {
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid #ff6b6b;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🔗 PAIR DEVICE</h2>
+        
+        <input type="text" id="number" placeholder="94703229057" value="94703229057">
+        <button onclick="pair()">GET CODE</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function pair() {
+            const number = document.getElementById('number').value.replace(/[^0-9]/g, '');
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = '<div class="loader"></div>';
+            
+            try {
+                const response = await fetch(`/code?number=${number}`);
+                const data = await response.json();
+                
+                if (data.code) {
+                    resultDiv.innerHTML = `
+                        <div class="code">${data.code}</div>
+                        <p>✅ Enter this code in WhatsApp</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p>❌ Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<p>❌ Connection failed</p>';
+            }
+        }
+    </script>
+</body>
+</html>
